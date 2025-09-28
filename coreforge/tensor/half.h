@@ -123,8 +123,12 @@ struct alignas(2) half {
     uint32_t s;
     std::memcpy(&s, &value, sizeof(value));
     uint16_t sign = static_cast<uint16_t>((s >> 16) & 0x8000);
+<<<<<<< HEAD
     uint16_t exp_fp32 = static_cast<uint16_t>((s >> 23) & 0xFF);
     uint16_t exp_val = exp_fp32 - 127;
+=======
+    uint16_t exponent = static_cast<uint16_t>(((s >> 23) & 0xFF) - 127);
+>>>>>>> db6de922ea86dac4ba62ba29ad0f9c7af94c22df
     int mantissa = s & 0x7FFFFF;
     uint16_t u = 0;
 
