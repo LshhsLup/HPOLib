@@ -7,4 +7,4 @@
 #define CF_HOST_DEVICE
 #endif
 
-#endif // __COREFORGE_CONFIG_H__
+#endif  // __COREFORGE_CONFIG_H__
