@@ -41,3 +41,7 @@
 *.dwo
 
 .vscode
+
+# Local build files
+build/*
+cmake-build-*/
