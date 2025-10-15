@@ -2,14 +2,14 @@
 #define __COREFORGE_DTYPE_H__
 
 #include <cstdint>
+#include <string>
 #include <type_traits>
 #include <typeinfo>
-#include <string>
 #include "BFloat16.h"
-#include "config.h"
 #include "Half.h"
+#include "config.h"
 
-namespace coreforge { 
+namespace coreforge {
 
 enum class DType : int8_t {
   Float32 = 0,
@@ -40,91 +40,93 @@ inline size_t getDTypeSize(DType dtype) {
   }
 }
 
-template<DType>
+template <DType>
 struct DTypeToCPPType {
   using type = void;
 };
 
-template<>
+template <>
 struct DTypeToCPPType<DType::Float32> {
   using type = float;
 };
 
-template<>
+template <>
 struct DTypeToCPPType<DType::Float16> {
   using type = Half;
 };
 
-template<>
+template <>
 struct DTypeToCPPType<DType::BFloat16> {
   using type = BFloat16;
 };
 
-template<>
+template <>
 struct DTypeToCPPType<DType::Int32> {
   using type = int32_t;
 };
 
-template<>
+template <>
 struct DTypeToCPPType<DType::Int64> {
   using type = int64_t;
 };
 
-template<>
+template <>
 struct DTypeToCPPType<DType::Bool> {
   using type = bool;
 };
 
-template<typename T>
-struct CPPTypeToDType { 
+template <typename T>
+struct CPPTypeToDType {
   static constexpr DType value = DType::DTypeCount;
 };
 
-template<>
+template <>
 struct CPPTypeToDType<float> {
   static constexpr DType value = DType::Float32;
 };
 
-template<>
+template <>
 struct CPPTypeToDType<Half> {
   static constexpr DType value = DType::Float16;
 };
 
-template<>
+template <>
 struct CPPTypeToDType<BFloat16> {
   static constexpr DType value = DType::BFloat16;
 };
 
-template<>
+template <>
 struct CPPTypeToDType<int32_t> {
   static constexpr DType value = DType::Int32;
 };
 
-template<>
+template <>
 struct CPPTypeToDType<int64_t> {
   static constexpr DType value = DType::Int64;
 };
 
-template<>
+template <>
 struct CPPTypeToDType<bool> {
   static constexpr DType value = DType::Bool;
 };
 
-template<DType dtype>
+template <DType dtype>
 using DTypeToCPPType_t = typename DTypeToCPPType<dtype>::type;
 
-template<typename T>
+template <typename T>
 static inline constexpr DType CPPTypeToDType_v = CPPTypeToDType<T>::value;
 
-template<typename T>
+template <typename T>
 void checkDTypeMatch(DType dtype) {
   static_assert(CPPTypeToDType_v<T> != DType::DTypeCount, "Unsupported type");
-  std::string debug_info = "DType and C++ type mismatch: expected "
-                + std::string(typeid(DTypeToCPPType_t<CPPTypeToDType_v<T>>).name()) + ", got "
-                + std::string(typeid(T).name());
-  static_assert(std::is_same<T, DTypeToCPPType_t<CPPTypeToDType_v<T>>>::value, debug_info.c_str());
+  std::string debug_info =
+      "DType and C++ type mismatch: expected " +
+      std::string(typeid(DTypeToCPPType_t<CPPTypeToDType_v<T>>).name()) +
+      ", got " + std::string(typeid(T).name());
+  static_assert(std::is_same<T, DTypeToCPPType_t<CPPTypeToDType_v<T>>>::value,
+                debug_info.c_str());
 }
 
-} // namespace coreforge
+}  // namespace coreforge
 
 #endif

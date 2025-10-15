@@ -12,8 +12,8 @@
 #include <cmath>
 #include <cstdint>
 #include <cstring>
-#include <type_traits>
 #include <limits>
+#include <type_traits>
 
 #include "config.h"
 
@@ -39,7 +39,8 @@ struct alignas(2) BFloat16 {
   struct from_bits_tag {};
   static constexpr CF_HOST_DEVICE from_bits_tag from_bits() { return {}; }
 
-  constexpr CF_HOST_DEVICE BFloat16(from_bits_tag, uint16_t bits) : storage(bits) {}
+  constexpr CF_HOST_DEVICE BFloat16(from_bits_tag, uint16_t bits)
+      : storage(bits) {}
 
  private:
   template <typename T>
@@ -130,11 +131,13 @@ struct alignas(2) BFloat16 {
 
   // BFloat16 -> double
   CF_HOST_DEVICE
-  operator double() const { return static_cast<double>(static_cast<float>(*this)); }
+  operator double() const {
+    return static_cast<double>(static_cast<float>(*this));
+  }
 
   // BFloat16 -> int
   CF_HOST_DEVICE
-  operator int() const { return static_cast<int>(static_cast<float>(*this)); }  
+  operator int() const { return static_cast<int>(static_cast<float>(*this)); }
 
   // cast to bool
   CF_HOST_DEVICE
@@ -146,7 +149,7 @@ struct alignas(2) BFloat16 {
   __nv_bfloat16 toCudaBFloat16() const {
 #if defined(__CUDA_ARCH__)
     return reinterpret_cast<const __nv_bfloat16&>(storage);
-#else 
+#else
     __nv_bfloat16_raw hr;
     std::memcpy(&hr, &storage, sizeof(hr));
     return __nv_bfloat16(hr);
@@ -202,7 +205,7 @@ inline bool isfinite(const BFloat16& h) {
 // nan_bf16
 CF_HOST_DEVICE
 inline BFloat16 nan_bf16(const char* tagp) {
-  (void)tagp;                      // unused
+  (void)tagp;                        // unused
   return BFloat16::bitcast(0x7FFF);  // quiet NaN
 }
 
@@ -236,7 +239,7 @@ inline int fpclassify(const BFloat16& h) {
 
 // sqrt
 CF_HOST_DEVICE
-inline BFloat16 sqrt(const BFloat16& h) { 
+inline BFloat16 sqrt(const BFloat16& h) {
 #if defined(__CUDA_RTC__)
   return BFloat16(sqrtf(static_cast<float>(h)));
 #else
@@ -266,7 +269,7 @@ namespace std {
 // std::numeric_limits specialization for BFloat16
 template <>
 struct numeric_limits<coreforge::BFloat16> {
-   static constexpr bool is_signed = true;
+  static constexpr bool is_signed = true;
   static constexpr bool is_specialized = true;
   static constexpr bool is_integer = false;
   static constexpr bool is_exact = false;
@@ -274,7 +277,8 @@ struct numeric_limits<coreforge::BFloat16> {
   static constexpr bool has_quiet_NaN = true;
   static constexpr bool has_signaling_NaN = true;
   static constexpr auto has_denorm = numeric_limits<float>::has_denorm;
-  static constexpr auto has_denorm_loss = numeric_limits<float>::has_denorm_loss;
+  static constexpr auto has_denorm_loss =
+      numeric_limits<float>::has_denorm_loss;
   static constexpr auto round_style = numeric_limits<float>::round_style;
   static constexpr bool is_iec559 = false;
   static constexpr bool is_bounded = true;
@@ -288,48 +292,50 @@ struct numeric_limits<coreforge::BFloat16> {
   static constexpr int max_exponent = 128;
   static constexpr int max_exponent10 = 38;
   static constexpr auto traps = numeric_limits<float>::traps;
-  static constexpr auto tinyness_before = numeric_limits<float>::tinyness_before;
+  static constexpr auto tinyness_before =
+      numeric_limits<float>::tinyness_before;
 
   static constexpr coreforge::BFloat16 min() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x0080)};
   }
 
-  static constexpr coreforge::BFloat16 max()  {
+  static constexpr coreforge::BFloat16 max() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x7F7F)};
   }
 
-  static constexpr coreforge::BFloat16 epsilon()  {
+  static constexpr coreforge::BFloat16 epsilon() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x0001)};
   }
 
-  static constexpr coreforge::BFloat16 round_error()  {
+  static constexpr coreforge::BFloat16 round_error() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x0001)};
   }
 
-  static constexpr coreforge::BFloat16 infinity()  {
+  static constexpr coreforge::BFloat16 infinity() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x7F80)};
   }
 
-  static constexpr coreforge::BFloat16 quiet_NaN()  {
+  static constexpr coreforge::BFloat16 quiet_NaN() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x7FC0)};
   }
 
-  static constexpr coreforge::BFloat16 signaling_NaN()  {
+  static constexpr coreforge::BFloat16 signaling_NaN() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x7FA0)};
   }
 
-  static constexpr coreforge::BFloat16 denorm_min()  {
+  static constexpr coreforge::BFloat16 denorm_min() {
     return {coreforge::BFloat16::from_bits(), static_cast<uint16_t>(0x0001)};
   }
 };
-} // namespace std
-#endif // !defined(__CUDA_RTC__)
+}  // namespace std
+#endif  // !defined(__CUDA_RTC__)
 
 namespace coreforge {
 // arthmetic operators
 CF_HOST_DEVICE
-inline bool operator==(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline bool operator==(const coreforge::BFloat16& a,
+                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return __heq(a.toCudaBFloat16(), b.toCudaBFloat16());
 #else
   return static_cast<float>(a) == static_cast<float>(b);
@@ -337,8 +343,9 @@ inline bool operator==(const coreforge::BFloat16& a, const coreforge::BFloat16& 
 }
 
 CF_HOST_DEVICE
-inline bool operator!=(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline bool operator!=(const coreforge::BFloat16& a,
+                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return __hne(a.toCudaBFloat16(), b.toCudaBFloat16());
 #else
   return static_cast<float>(a) != static_cast<float>(b);
@@ -346,17 +353,19 @@ inline bool operator!=(const coreforge::BFloat16& a, const coreforge::BFloat16& 
 }
 
 CF_HOST_DEVICE
-inline bool operator<(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline bool operator<(const coreforge::BFloat16& a,
+                      const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return __hlt(a.toCudaBFloat16(), b.toCudaBFloat16());
 #else
-  return static_cast<float>(a) < static_cast<float>(b); 
+  return static_cast<float>(a) < static_cast<float>(b);
 #endif
 }
 
 CF_HOST_DEVICE
-inline bool operator<=(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline bool operator<=(const coreforge::BFloat16& a,
+                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return __hle(a.toCudaBFloat16(), b.toCudaBFloat16());
 #else
   return static_cast<float>(a) <= static_cast<float>(b);
@@ -364,8 +373,9 @@ inline bool operator<=(const coreforge::BFloat16& a, const coreforge::BFloat16& 
 }
 
 CF_HOST_DEVICE
-inline bool operator>(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline bool operator>(const coreforge::BFloat16& a,
+                      const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return __hgt(a.toCudaBFloat16(), b.toCudaBFloat16());
 #else
   return static_cast<float>(a) > static_cast<float>(b);
@@ -373,8 +383,9 @@ inline bool operator>(const coreforge::BFloat16& a, const coreforge::BFloat16& b
 }
 
 CF_HOST_DEVICE
-inline bool operator>=(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline bool operator>=(const coreforge::BFloat16& a,
+                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return __hge(a.toCudaBFloat16(), b.toCudaBFloat16());
 #else
   return static_cast<float>(a) >= static_cast<float>(b);
@@ -382,8 +393,9 @@ inline bool operator>=(const coreforge::BFloat16& a, const coreforge::BFloat16& 
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16 operator+(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16 operator+(const coreforge::BFloat16& a,
+                                     const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return coreforge::BFloat16(__hadd(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
   return coreforge::BFloat16(static_cast<float>(a) + static_cast<float>(b));
@@ -391,35 +403,38 @@ inline coreforge::BFloat16 operator+(const coreforge::BFloat16& a, const corefor
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16 operator-(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16 operator-(const coreforge::BFloat16& a,
+                                     const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return coreforge::BFloat16(__hsub(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
-  return coreforge::BFloat16(static_cast<float>(a) - static_cast<float>(b));  
+  return coreforge::BFloat16(static_cast<float>(a) - static_cast<float>(b));
 #endif
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16 operator*(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16 operator*(const coreforge::BFloat16& a,
+                                     const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return coreforge::BFloat16(__hmul(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
-  return coreforge::BFloat16(static_cast<float>(a) * static_cast<float>(b));  
+  return coreforge::BFloat16(static_cast<float>(a) * static_cast<float>(b));
 #endif
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16 operator/(const coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16 operator/(const coreforge::BFloat16& a,
+                                     const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return coreforge::BFloat16(__hdiv(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
-  return coreforge::BFloat16(static_cast<float>(a) / static_cast<float>(b));  
+  return coreforge::BFloat16(static_cast<float>(a) / static_cast<float>(b));
 #endif
 }
 
 CF_HOST_DEVICE
 inline coreforge::BFloat16 operator-(const coreforge::BFloat16& a) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   return coreforge::BFloat16(__hneg(a.toCudaBFloat16()));
 #else
   return static_cast<coreforge::BFloat16>(-static_cast<float>(a));
@@ -427,8 +442,9 @@ inline coreforge::BFloat16 operator-(const coreforge::BFloat16& a) {
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16& operator+=(coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16& operator+=(coreforge::BFloat16& a,
+                                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   a = coreforge::BFloat16(__hadd(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
   a = coreforge::BFloat16(static_cast<float>(a) + static_cast<float>(b));
@@ -437,41 +453,45 @@ inline coreforge::BFloat16& operator+=(coreforge::BFloat16& a, const coreforge::
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16& operator-=(coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16& operator-=(coreforge::BFloat16& a,
+                                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   a = coreforge::BFloat16(__hsub(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
-  a = coreforge::BFloat16(static_cast<float>(a) - static_cast<float>(b)); 
+  a = coreforge::BFloat16(static_cast<float>(a) - static_cast<float>(b));
 #endif
   return a;
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16& operator*=(coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16& operator*=(coreforge::BFloat16& a,
+                                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   a = coreforge::BFloat16(__hmul(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
-  a = coreforge::BFloat16(static_cast<float>(a) * static_cast<float>(b)); 
+  a = coreforge::BFloat16(static_cast<float>(a) * static_cast<float>(b));
 #endif
   return a;
 }
 
 CF_HOST_DEVICE
-inline coreforge::BFloat16& operator/=(coreforge::BFloat16& a, const coreforge::BFloat16& b) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
+inline coreforge::BFloat16& operator/=(coreforge::BFloat16& a,
+                                       const coreforge::BFloat16& b) {
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
   a = coreforge::BFloat16(__hdiv(a.toCudaBFloat16(), b.toCudaBFloat16()));
 #else
-  a = coreforge::BFloat16(static_cast<float>(a) / static_cast<float>(b));   
+  a = coreforge::BFloat16(static_cast<float>(a) / static_cast<float>(b));
 #endif
   return a;
 }
 
 CF_HOST_DEVICE
 inline coreforge::BFloat16& operator++(coreforge::BFloat16& a) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
-  a = coreforge::BFloat16(__hadd(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
+  a = coreforge::BFloat16(
+      __hadd(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
 #else
-  a = coreforge::BFloat16(static_cast<float>(a) + 1.0f);  
+  a = coreforge::BFloat16(static_cast<float>(a) + 1.0f);
 #endif
   return a;
 }
@@ -479,8 +499,9 @@ inline coreforge::BFloat16& operator++(coreforge::BFloat16& a) {
 CF_HOST_DEVICE
 inline coreforge::BFloat16 operator++(coreforge::BFloat16& a, int) {
   coreforge::BFloat16 old(a);
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
-  a = coreforge::BFloat16(__hadd(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
+  a = coreforge::BFloat16(
+      __hadd(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
 #else
   a = coreforge::BFloat16(static_cast<float>(a) + 1.0f);
 #endif
@@ -489,10 +510,11 @@ inline coreforge::BFloat16 operator++(coreforge::BFloat16& a, int) {
 
 CF_HOST_DEVICE
 inline coreforge::BFloat16& operator--(coreforge::BFloat16& a) {
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
-  a = coreforge::BFloat16(__hsub(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
+  a = coreforge::BFloat16(
+      __hsub(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
 #else
-  a = coreforge::BFloat16(static_cast<float>(a) - 1.0f);  
+  a = coreforge::BFloat16(static_cast<float>(a) - 1.0f);
 #endif
   return a;
 }
@@ -500,10 +522,11 @@ inline coreforge::BFloat16& operator--(coreforge::BFloat16& a) {
 CF_HOST_DEVICE
 inline coreforge::BFloat16 operator--(coreforge::BFloat16& a, int) {
   coreforge::BFloat16 old(a);
-#if defined(__CUDA_ARCH__) &&  (__CUDA_ARCH__ >= 800)
-  a = coreforge::BFloat16(__hsub(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 800)
+  a = coreforge::BFloat16(
+      __hsub(a.toCudaBFloat16(), coreforge::BFloat16(1.0f).toCudaBFloat16()));
 #else
-  a = coreforge::BFloat16(static_cast<float>(a) - 1.0f);  
+  a = coreforge::BFloat16(static_cast<float>(a) - 1.0f);
 #endif
   return old;
 }
@@ -519,4 +542,4 @@ CF_HOST_DEVICE
 inline coreforge::BFloat16 operator"" _bf16(unsigned long long int value) {
   return coreforge::BFloat16(static_cast<uint32_t>(value));
 }
-#endif // __COREFORGE_BFLOAT16_H__
+#endif  // __COREFORGE_BFLOAT16_H__
