@@ -8,6 +8,7 @@
 #include "BFloat16.h"
 #include "Half.h"
 #include "config.h"
+#include "utils.h"
 
 namespace coreforge {
 
@@ -118,13 +119,27 @@ static inline constexpr DType CPPTypeToDType_v = CPPTypeToDType<T>::value;
 
 template <typename T>
 void checkDTypeMatch(DType dtype) {
-  static_assert(CPPTypeToDType_v<T> != DType::DTypeCount, "Unsupported type");
-  std::string debug_info =
-      "DType and C++ type mismatch: expected " +
-      std::string(typeid(DTypeToCPPType_t<CPPTypeToDType_v<T>>).name()) +
-      ", got " + std::string(typeid(T).name());
-  static_assert(std::is_same<T, DTypeToCPPType_t<CPPTypeToDType_v<T>>>::value,
-                debug_info.c_str());
+  if (dtype == DType::Float32) {
+    ASSERT_MSG(std::is_same<T, float>::value,
+               "DType mismatch: expected float, got %s", typeid(T).name());
+  } else if (dtype == DType::Float16) {
+    ASSERT_MSG(std::is_same<T, Half>::value,
+               "DType mismatch: expected Half, got %s", typeid(T).name());
+  } else if (dtype == DType::BFloat16) {
+    ASSERT_MSG(std::is_same<T, BFloat16>::value,
+               "DType mismatch: expected BFloat16, got %s", typeid(T).name());
+  } else if (dtype == DType::Int32) {
+    ASSERT_MSG(std::is_same<T, int32_t>::value,
+               "DType mismatch: expected int32_t, got %s", typeid(T).name());
+  } else if (dtype == DType::Int64) {
+    ASSERT_MSG(std::is_same<T, int64_t>::value,
+               "DType mismatch: expected int64_t, got %s", typeid(T).name());
+  } else if (dtype == DType::Bool) {
+    ASSERT_MSG(std::is_same<T, bool>::value,
+               "DType mismatch: expected bool, got %s", typeid(T).name());
+  } else {
+    ASSERT_MSG(false, "Unknown DType");
+  }
 }
 
 }  // namespace coreforge
