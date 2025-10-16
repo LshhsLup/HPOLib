@@ -3,8 +3,10 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <typeinfo>
+#include <vector>
 #include "BFloat16.h"
 #include "Half.h"
 #include "config.h"
@@ -141,6 +143,61 @@ void checkDTypeMatch(DType dtype) {
     ASSERT_MSG(false, "Unknown DType");
   }
 }
+
+static constexpr std::string_view dtype_names[] = {
+    "Float32", "Float16", "BFloat16", "Int32", "Int64", "Bool",
+};
+
+inline constexpr std::string_view DTypeToString(DType dtype) {
+  return dtype_names[static_cast<size_t>(dtype)];
+}
+
+template <typename T>
+using Array1d = std::vector<T>;
+
+template <typename T>
+using Array2d = std::vector<std::vector<T>>;
+
+template <typename T>
+using Array3d = std::vector<std::vector<std::vector<T>>>;
+
+// flatten to 1d array
+template <typename T>
+Array1d<T> flatten(const Array2d<T>& array) {
+  Array1d<T> result;
+  result.reserve(array.size() * array[0].size());
+  for (const auto& row : array) {
+    result.insert(result.end(), row.begin(), row.end());
+  }
+  return result;
+}
+
+template <typename T>
+Array1d<T> flatten(const Array3d<T>& array) {
+  Array1d<T> result;
+  result.reserve(array.size() * array[0].size() * array[0][0].size());
+  for (const auto& plane : array) {
+    for (const auto& row : plane) {
+      result.insert(result.end(), row.begin(), row.end());
+    }
+  }
+  return result;
+}
+
+constexpr size_t MAX_TENSOR_DIMS = 8;
+
+template <typename T>
+struct ALIGN16 DimsArray {
+  T data[MAX_TENSOR_DIMS];
+};
+
+struct ALIGN16 Dim2D {
+  int64_t rows;
+  int64_t cols;
+
+  constexpr Dim2D(int64_t rows, int64_t cols) : rows(rows), cols(cols) {}
+  constexpr Dim2D(int64_t n) : rows(n), cols(n) {}
+};
 
 }  // namespace coreforge
 

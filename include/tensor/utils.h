@@ -22,13 +22,13 @@ namespace coreforge {
 #endif
 
 // ASSERT: simple form
-#define ASSERT(expr)                                                         \
-  do {                                                                       \
-    if (!(expr)) {                                                           \
-      LOGE("Assertion failed: (%s)", #expr);                                 \
-      DEBUG_BREAK();                                                         \
-      std::abort();                                                          \
-    }                                                                        \
+#define ASSERT(expr)                         \
+  do {                                       \
+    if (!(expr)) {                           \
+      LOGE("Assertion failed: (%s)", #expr); \
+      DEBUG_BREAK();                         \
+      std::abort();                          \
+    }                                        \
   } while (0)
 
 // ASSERT_MSG: printf-style extra message
@@ -42,6 +42,15 @@ namespace coreforge {
     }                                                               \
   } while (0)
 
+// align
+#ifdef _MSC_VER
+#define ALIGN(n) __declspec(align(n))
+#else
+#define ALIGN(n) __attribute__((aligned(n)))
+#endif
+
+// align to 16 bytes
+#define ALIGN16 ALIGN(16)
 }  // namespace coreforge
 
 #endif  // __CFORGE_UTILS_H__
