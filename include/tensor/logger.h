@@ -1,5 +1,5 @@
-#ifndef __CFORGE_LOGGER_H__
-#define __CFORGE_LOGGER_H__
+#ifndef __COREFORGE_LOGGER_H__
+#define __COREFORGE_LOGGER_H__
 
 #include <atomic>
 #include <chrono>

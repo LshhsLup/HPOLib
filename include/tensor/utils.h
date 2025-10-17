@@ -1,5 +1,5 @@
-#ifndef __CFORGE_UTILS_H__
-#define __CFORGE_UTILS_H__
+#ifndef __COREFORGE_UTILS_H__
+#define __COREFORGE_UTILS_H__
 
 #include <cstdlib>
 #include "logger.h"
