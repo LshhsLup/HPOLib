@@ -20,6 +20,8 @@ inline constexpr std::string_view DeviceTypeToString(DeviceType device_type) {
 }
 
 struct Device {
+  // type: CPU or GPU
+  // index: GPU index, 0 for CPU
   DeviceType type;
   DeviceIndex index;
 
