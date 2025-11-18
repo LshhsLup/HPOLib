@@ -292,8 +292,6 @@ class ArrayView {
   size_t size_;
 };
 
-using IntArrayView = ArrayView<int64_t>;
-
 }  // namespace coreforge
 
 #endif  // __COREFORGE_VECTOR_UTILS_H__

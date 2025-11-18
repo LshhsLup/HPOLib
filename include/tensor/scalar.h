@@ -10,14 +10,14 @@ class Scalar {
  public:
   using ValueType = std::variant<float, Half, BFloat16, int32_t, int64_t, bool>;
 
-  Scalar(float value) : value_(value) {}
-  Scalar(Half value) : value_(value) {}
-  Scalar(BFloat16 value) : value_(value) {}
-  Scalar(int32_t value) : value_(value) {}
-  Scalar(int64_t value) : value_(value) {}
-  Scalar(bool value) : value_(value) {}
+  constexpr Scalar(float value) : value_(value) {}
+  constexpr Scalar(Half value) : value_(value) {}
+  constexpr Scalar(BFloat16 value) : value_(value) {}
+  constexpr Scalar(int32_t value) : value_(value) {}
+  constexpr Scalar(int64_t value) : value_(value) {}
+  constexpr Scalar(bool value) : value_(value) {}
 
-  DType dtype() const {
+  constexpr DType dtype() const {
     return std::visit(
         [](auto&& arg) -> DType {
           using T = std::decay_t<decltype(arg)>;
@@ -39,7 +39,7 @@ class Scalar {
 
   // Convert to type T
   template <typename T>
-  T to() const {
+  constexpr T to() const {
     return std::visit(
         [](auto&& arg) -> T {
           using U = std::decay_t<decltype(arg)>;
@@ -54,7 +54,7 @@ class Scalar {
 
   // convert to DType
   template <DType dtype>
-  DTypeToCPPType_t<dtype> to() const {
+  constexpr DTypeToCPPType_t<dtype> to() const {
     return to<DTypeToCPPType_t<dtype>>();
   }
 
