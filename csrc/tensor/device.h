@@ -16,12 +16,16 @@ static constexpr std::string_view device_type_names[] = {
 };
 
 inline constexpr std::string_view DeviceTypeToString(DeviceType device_type) {
-  return device_type_names[static_cast<size_t>(device_type)];
+  auto idx = static_cast<size_t>(device_type);
+  if (idx >= static_cast<size_t>(DeviceType::DeviceTypeCount)) {
+    return "Unknown";
+  }
+  return device_type_names[idx];
 }
 
 struct Device {
   // type: CPU or GPU
-  // index: GPU index, 0 for CPU
+  // index: GPU index
   DeviceType type;
   DeviceIndex index;
 

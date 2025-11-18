@@ -76,8 +76,8 @@ endif()
 add_library(coreforge INTERFACE)
 
 target_include_directories(coreforge INTERFACE 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/csrc>
+    $<INSTALL_INTERFACE:csrc>
 )
 
 enable_testing()
