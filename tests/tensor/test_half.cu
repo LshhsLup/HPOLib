@@ -4,7 +4,7 @@
 #include <limits>
 #include <vector>
 
-using namespace coreforge;
+using namespace hpolib;
 
 #if defined(__CUDACC__)
 #include <cuda_runtime.h>

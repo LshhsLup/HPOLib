@@ -1,0 +1,53 @@
+#ifndef __HPOLIB_DEVICE_H__
+#define __HPOLIB_DEVICE_H__
+
+#include <cstdint>
+#include <string_view>
+
+namespace hpolib {
+
+enum class DeviceType : int8_t { CPU = 0, GPU = 1, DeviceTypeCount };
+
+using DeviceIndex = int8_t;
+
+static constexpr std::string_view device_type_names[] = {
+    "CPU",
+    "GPU",
+};
+
+inline constexpr std::string_view DeviceTypeToString(DeviceType device_type) {
+  auto idx = static_cast<size_t>(device_type);
+  if (idx >= static_cast<size_t>(DeviceType::DeviceTypeCount)) {
+    return "Unknown";
+  }
+  return device_type_names[idx];
+}
+
+struct Device {
+  // type: CPU or GPU
+  // index: GPU index
+  DeviceType type;
+  DeviceIndex index;
+
+  constexpr Device(DeviceType type, DeviceIndex index = 0)
+      : type(type), index(index) {}
+
+  constexpr bool operator==(const Device& other) const {
+    return type == other.type && index == other.index;
+  }
+
+  // is CPU device
+  constexpr bool isCPU() const { return type == DeviceType::CPU; }
+
+  // is GPU device
+  constexpr bool isGPU() const { return type == DeviceType::GPU; }
+
+  static constexpr Device CPU() { return Device(DeviceType::CPU); }
+  static constexpr Device GPU(DeviceIndex index = 0) {
+    return Device(DeviceType::GPU, index);
+  }
+};
+
+}  // namespace hpolib
+
+#endif  // __HPOLIB_DEVICE_H__

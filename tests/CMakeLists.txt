@@ -11,7 +11,7 @@ elseif(MSVC)
 endif()
 
 target_link_libraries(test_half PRIVATE
-    coreforge      
+    hpolib      
     gtest_main     
 )
 
