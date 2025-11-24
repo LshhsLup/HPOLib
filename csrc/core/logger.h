@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_LOGGER_H__
-#define __COREFORGE_LOGGER_H__
+#ifndef __HPOLIB_LOGGER_H__
+#define __HPOLIB_LOGGER_H__
 
 #include <atomic>
 #include <chrono>
@@ -14,31 +14,31 @@
 #include <string>
 #include <thread>
 
-namespace coreforge {
+namespace hpolib {
 
-#define LOGD(...)                                                      \
-  do {                                                                 \
-    if (coreforge::Logger::shouldLog(coreforge::LogLevel::LOG_DEBUG))  \
-      coreforge::Logger::log(coreforge::LogLevel::LOG_DEBUG, __FILE__, \
-                             __LINE__, __VA_ARGS__);                   \
+#define LOGD(...)                                                          \
+  do {                                                                     \
+    if (hpolib::Logger::shouldLog(hpolib::LogLevel::LOG_DEBUG))            \
+      hpolib::Logger::log(hpolib::LogLevel::LOG_DEBUG, __FILE__, __LINE__, \
+                          __VA_ARGS__);                                    \
   } while (0)
-#define LOGI(...)                                                     \
-  do {                                                                \
-    if (coreforge::Logger::shouldLog(coreforge::LogLevel::LOG_INFO))  \
-      coreforge::Logger::log(coreforge::LogLevel::LOG_INFO, __FILE__, \
-                             __LINE__, __VA_ARGS__);                  \
+#define LOGI(...)                                                         \
+  do {                                                                    \
+    if (hpolib::Logger::shouldLog(hpolib::LogLevel::LOG_INFO))            \
+      hpolib::Logger::log(hpolib::LogLevel::LOG_INFO, __FILE__, __LINE__, \
+                          __VA_ARGS__);                                   \
   } while (0)
-#define LOGW(...)                                                     \
-  do {                                                                \
-    if (coreforge::Logger::shouldLog(coreforge::LogLevel::LOG_WARN))  \
-      coreforge::Logger::log(coreforge::LogLevel::LOG_WARN, __FILE__, \
-                             __LINE__, __VA_ARGS__);                  \
+#define LOGW(...)                                                         \
+  do {                                                                    \
+    if (hpolib::Logger::shouldLog(hpolib::LogLevel::LOG_WARN))            \
+      hpolib::Logger::log(hpolib::LogLevel::LOG_WARN, __FILE__, __LINE__, \
+                          __VA_ARGS__);                                   \
   } while (0)
-#define LOGE(...)                                                      \
-  do {                                                                 \
-    if (coreforge::Logger::shouldLog(coreforge::LogLevel::LOG_ERROR))  \
-      coreforge::Logger::log(coreforge::LogLevel::LOG_ERROR, __FILE__, \
-                             __LINE__, __VA_ARGS__);                   \
+#define LOGE(...)                                                          \
+  do {                                                                     \
+    if (hpolib::Logger::shouldLog(hpolib::LogLevel::LOG_ERROR))            \
+      hpolib::Logger::log(hpolib::LogLevel::LOG_ERROR, __FILE__, __LINE__, \
+                          __VA_ARGS__);                                    \
   } while (0)
 
 enum class LogLevel : int8_t {
@@ -176,6 +176,6 @@ class Logger {
   static inline std::ofstream log_file_;
   static inline std::atomic<bool> file_enabled_{false};
 };
-}  // namespace coreforge
+}  // namespace hpolib
 
 #endif

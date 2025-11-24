@@ -1,10 +1,10 @@
-#ifndef __COREFORGE_UTILS_H__
-#define __COREFORGE_UTILS_H__
+#ifndef __HPOLIB_UTILS_H__
+#define __HPOLIB_UTILS_H__
 
 #include <cstdlib>
 #include "logger.h"
 
-namespace coreforge {
+namespace hpolib {
 
 // assert
 #ifdef _MSC_VER
@@ -51,6 +51,6 @@ namespace coreforge {
 
 // align to 16 bytes
 #define ALIGN16 ALIGN(16)
-}  // namespace coreforge
+}  // namespace hpolib
 
 #endif  // __CFORGE_UTILS_H__

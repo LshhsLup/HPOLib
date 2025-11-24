@@ -1,12 +1,12 @@
-#ifndef __COREFORGE_TENSOR_IMPL_H__
-#define __COREFORGE_TENSOR_IMPL_H__
+#ifndef __HPOLIB_TENSOR_IMPL_H__
+#define __HPOLIB_TENSOR_IMPL_H__
 
 #include "DType.h"
 #include "options.h"
 #include "storage.h"
 #include "vectorUtils.h"
 
-namespace coreforge {
+namespace hpolib {
 
 constexpr size_t small_vector_inline_size = 5;
 using IntArrayView = ArrayView<int64_t>;
@@ -428,5 +428,5 @@ class TensorImpl {
   }
 };
 
-}  // namespace coreforge
-#endif  // __COREFORGE_TENSOR_IMPL_H__
+}  // namespace hpolib
+#endif  // __HPOLIB_TENSOR_IMPL_H__

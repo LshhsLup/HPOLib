@@ -1,10 +1,10 @@
-#ifndef __COREFORGE_SCALAR_H__
-#define __COREFORGE_SCALAR_H__
+#ifndef __HPOLIB_SCALAR_H__
+#define __HPOLIB_SCALAR_H__
 
 #include <variant>
 #include "DType.h"
 
-namespace coreforge {
+namespace hpolib {
 
 class Scalar {
  public:
@@ -62,6 +62,6 @@ class Scalar {
   ValueType value_;
 };
 
-}  // namespace coreforge
+}  // namespace hpolib
 
-#endif  // __COREFORGE_SCALAR_H__
+#endif  // __HPOLIB_SCALAR_H__

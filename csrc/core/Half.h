@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_HALF_H__
-#define __COREFORGE_HALF_H__
+#ifndef __HPOLIB_HALF_H__
+#define __HPOLIB_HALF_H__
 
 /***************************************************************************************************
  * @file Half.h
@@ -13,8 +13,8 @@
 // Configure CPU hardware acceleration
 //====================================
 
-#ifndef COREFORGE_ENABLE_F16C
-#define COREFORGE_ENABLE_F16C 1
+#ifndef HPOLIB_ENABLE_F16C
+#define HPOLIB_ENABLE_F16C 1
 #endif
 
 #include <cmath>
@@ -29,7 +29,7 @@
 
 #include "config.h"
 
-#if !defined(__CUDACC__) && COREFORGE_ENABLE_F16C &&                \
+#if !defined(__CUDACC__) && HPOLIB_ENABLE_F16C &&                   \
     (defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || \
      defined(_M_IX86))
 #if defined(_MSC_VER)
@@ -41,9 +41,9 @@
 #endif  // _MSC_VER
 #endif  // F16C check
 
-namespace coreforge {
+namespace hpolib {
 namespace detail {
-#if !defined(__CUDACC__) && COREFORGE_ENABLE_F16C &&                \
+#if !defined(__CUDACC__) && HPOLIB_ENABLE_F16C &&                   \
     (defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || \
      defined(_M_IX86))
 #include <cpuid.h>
@@ -112,7 +112,7 @@ struct alignas(2) Half {
 #if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 530)
     return Half{__float2half_rn(value)};
 #else
-#if !defined(__CUDACC__) && COREFORGE_ENABLE_F16C
+#if !defined(__CUDACC__) && HPOLIB_ENABLE_F16C
     if (detail::CpuF16CDetector::instance().isAvailable()) {
       uint16_t hbits = detail::float_to_half_f16c(value);
       return bitcast(hbits);
@@ -223,7 +223,7 @@ struct alignas(2) Half {
 #if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 530)
     return __half2float(*reinterpret_cast<__half*>(&value.storage));
 #else
-#if !defined(__CUDACC__) && COREFORGE_ENABLE_F16C
+#if !defined(__CUDACC__) && HPOLIB_ENABLE_F16C
     if (detail::CpuF16CDetector::instance().isAvailable()) {
       return detail::half_to_float_f16c(value.storage);
     }
@@ -390,7 +390,7 @@ struct alignas(2) Half {
 
 // for <cmath> functions
 CF_HOST_DEVICE
-inline bool signbit(const coreforge::Half& h) {
+inline bool signbit(const hpolib::Half& h) {
   return h.signbit();
 }
 
@@ -457,13 +457,13 @@ inline Half copysign(const Half& x, const Half& y) {
   uint16_t mag = x.raw() & 0x7FFF;
   return Half::bitcast(sign | mag);
 }
-}  // namespace coreforge
+}  // namespace hpolib
 
 #if !defined(__CUDA_RTC__)
 namespace std {
 // for std::numeric_limits
 template <>
-struct numeric_limits<coreforge::Half> {
+struct numeric_limits<hpolib::Half> {
   static constexpr bool is_specialized = true;
   static constexpr bool is_signed = true;
   static constexpr bool is_integer = false;
@@ -490,33 +490,33 @@ struct numeric_limits<coreforge::Half> {
   static constexpr auto tinyness_before =
       numeric_limits<float>::tinyness_before;
 
-  static constexpr coreforge::Half min() noexcept {
-    return {coreforge::Half::from_bits(),
+  static constexpr hpolib::Half min() noexcept {
+    return {hpolib::Half::from_bits(),
             0x0001};  // 2^-24, minimum positive denormalized Half
   }
-  static constexpr coreforge::Half max() noexcept {
-    return {coreforge::Half::from_bits(), 0x7BFF};  // (2-2^-10)*2^15
+  static constexpr hpolib::Half max() noexcept {
+    return {hpolib::Half::from_bits(), 0x7BFF};  // (2-2^-10)*2^15
   }
-  static constexpr coreforge::Half lowest() noexcept {
-    return {coreforge::Half::from_bits(), 0xFBFF};  // -(2-2^-10)*2^15
+  static constexpr hpolib::Half lowest() noexcept {
+    return {hpolib::Half::from_bits(), 0xFBFF};  // -(2-2^-10)*2^15
   }
-  static constexpr coreforge::Half infinity() noexcept {
-    return {coreforge::Half::from_bits(), 0x7C00};
+  static constexpr hpolib::Half infinity() noexcept {
+    return {hpolib::Half::from_bits(), 0x7C00};
   }
-  static constexpr coreforge::Half quiet_NaN() noexcept {
-    return {coreforge::Half::from_bits(), 0x7E00};
+  static constexpr hpolib::Half quiet_NaN() noexcept {
+    return {hpolib::Half::from_bits(), 0x7E00};
   }
-  static constexpr coreforge::Half signaling_NaN() noexcept {
-    return {coreforge::Half::from_bits(), 0x7D00};
+  static constexpr hpolib::Half signaling_NaN() noexcept {
+    return {hpolib::Half::from_bits(), 0x7D00};
   }
-  static constexpr coreforge::Half denorm_min() noexcept {
-    return {coreforge::Half::from_bits(), 0x0001};  // 2^-24
+  static constexpr hpolib::Half denorm_min() noexcept {
+    return {hpolib::Half::from_bits(), 0x0001};  // 2^-24
   }
 };
 }  // namespace std
 #endif  // !__CUDA_RTC__
 
-namespace coreforge {
+namespace hpolib {
 // artithmetic operators
 CF_HOST_DEVICE
 inline bool operator==(const Half& a, const Half& b) {
@@ -698,17 +698,17 @@ inline Half operator--(Half& a, int) {
 #endif
   return ret;
 }
-}  // namespace coreforge
+}  // namespace hpolib
 
 // user-defined literal for Half-precision floating point
 CF_HOST_DEVICE
-inline coreforge::Half operator"" _hf(long double value) {
-  return coreforge::Half(static_cast<float>(value));
+inline hpolib::Half operator"" _hf(long double value) {
+  return hpolib::Half(static_cast<float>(value));
 }
 
 CF_HOST_DEVICE
-inline coreforge::Half operator"" _hf(unsigned long long int value) {
-  return coreforge::Half(static_cast<float>(value));
+inline hpolib::Half operator"" _hf(unsigned long long int value) {
+  return hpolib::Half(static_cast<float>(value));
 }
 
-#endif  // __COREFORGE_HALF_H__
+#endif  // __HPOLIB_HALF_H__

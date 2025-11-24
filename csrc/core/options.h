@@ -1,10 +1,10 @@
-#ifndef __COREFORGE_OPTIONS_H__
-#define __COREFORGE_OPTIONS_H__
+#ifndef __HPOLIB_OPTIONS_H__
+#define __HPOLIB_OPTIONS_H__
 
 #include "DType.h"
 #include "device.h"
 
-namespace coreforge {
+namespace hpolib {
 
 namespace options {
 // Thread-local default options for tensor creation.
@@ -102,6 +102,6 @@ constexpr inline Options pinnedMemory(bool pm = true) {
 
 }  // namespace options
 
-}  // namespace coreforge
+}  // namespace hpolib
 
 #endif

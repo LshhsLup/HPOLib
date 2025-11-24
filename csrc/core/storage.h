@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_STORAGE_H__
-#define __COREFORGE_STORAGE_H__
+#ifndef __HPOLIB_STORAGE_H__
+#define __HPOLIB_STORAGE_H__
 
 #include <functional>
 #include <memory>
@@ -7,7 +7,7 @@
 #include "allocator.h"
 #include "device.h"
 
-namespace coreforge {
+namespace hpolib {
 
 class Storage {
  public:
@@ -100,6 +100,6 @@ class Storage {
   std::unique_ptr<void, std::function<void(void*)>> data_;
 };
 
-}  // namespace coreforge
+}  // namespace hpolib
 
-#endif  // __COREFORGE_STORAGE_H__
+#endif  // __HPOLIB_STORAGE_H__

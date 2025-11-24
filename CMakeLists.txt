@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(coreforge LANGUAGES CXX)
+project(hpolib LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,8 +10,8 @@ set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
 # GPU ENVIRONMENT
-option(COREFORGE_ENABLE_CUDA "Enable CUDA support for GPU acceleration" ON)
-if(COREFORGE_ENABLE_CUDA)
+option(HPOLIB_ENABLE_CUDA "Enable CUDA support for GPU acceleration" ON)
+if(HPOLIB_ENABLE_CUDA)
     find_package(CUDAToolkit QUIET)
     if(CUDAToolkit_FOUND)
         message(STATUS "CUDA Toolkit found, enabling GPU support.")
@@ -69,13 +69,13 @@ if(COREFORGE_ENABLE_CUDA)
         endif()
     else()
         message(STATUS "CUDA Toolkit not found, disabling GPU support. Building in CPU-only mode.")
-        set(COREFORGE_ENABLE_CUDA OFF)
+        set(HPOLIB_ENABLE_CUDA OFF)
     endif()
 endif()
 
-add_library(coreforge INTERFACE)
+add_library(hpolib INTERFACE)
 
-target_include_directories(coreforge INTERFACE 
+target_include_directories(hpolib INTERFACE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/csrc>
     $<INSTALL_INTERFACE:csrc>
 )

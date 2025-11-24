@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_ALLOCATOR_H__
-#define __COREFORGE_ALLOCATOR_H__
+#ifndef __HPOLIB_ALLOCATOR_H__
+#define __HPOLIB_ALLOCATOR_H__
 
 #include <memory>
 #include <mutex>
@@ -8,7 +8,7 @@
 #include "device.h"
 #include "options.h"
 
-namespace coreforge {
+namespace hpolib {
 
 constexpr size_t DEFAULT_ALIGNMENT = 32;
 
@@ -56,7 +56,7 @@ class CPUAllocator : public Allocator {
 };
 
 #if defined(__CUDACC__)
-using coreforge::cuda::CUDA_CHECK;
+using hpolib::cuda::CUDA_CHECK;
 
 class CPUPageLockedAllocator : public Allocator {
  public:
@@ -136,5 +136,5 @@ Allocator* getAllocator(const Options& options) {
   return nullptr;
 }
 
-}  // namespace coreforge
-#endif  // __COREFORGE_ALLOCATOR_H__
+}  // namespace hpolib
+#endif  // __HPOLIB_ALLOCATOR_H__

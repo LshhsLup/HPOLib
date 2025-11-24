@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_VECTOR_UTILS_H__
-#define __COREFORGE_VECTOR_UTILS_H__
+#ifndef __HPOLIB_VECTOR_UTILS_H__
+#define __HPOLIB_VECTOR_UTILS_H__
 
 #include <initializer_list>
 #include <memory>
@@ -7,7 +7,7 @@
 #include <vector>
 #include "utils.h"
 
-namespace coreforge {
+namespace hpolib {
 template <typename T>
 class ArrayView;
 
@@ -292,6 +292,6 @@ class ArrayView {
   size_t size_;
 };
 
-}  // namespace coreforge
+}  // namespace hpolib
 
-#endif  // __COREFORGE_VECTOR_UTILS_H__
+#endif  // __HPOLIB_VECTOR_UTILS_H__

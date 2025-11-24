@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_TENSOR_H__
-#define __COREFORGE_TENSOR_H__
+#ifndef __HPOLIB_TENSOR_H__
+#define __HPOLIB_TENSOR_H__
 
 #include <memory>
 #include <optional>
@@ -7,7 +7,7 @@
 #include "scalar.h"
 #include "tensorImpl.h"
 
-namespace coreforge {
+namespace hpolib {
 class Tensor {
  public:
   using TensorPair = std::pair<Tensor, Tensor>;
@@ -120,6 +120,8 @@ class Tensor {
   template <typename T>
   static Tensor linspace(T start, T end, int64_t steps, Options options = {}) {}
 
+  constexpr DType dtype() const { return impl_->dtype(); }
+  constexpr Device device() const { return impl_->device(); }
   constexpr bool defined() const { return impl_ != nullptr; }
   constexpr TensorImpl& impl() const { return *impl_; }
   bool pinnedMemory() const { return impl_->pinnedMemory(); }
@@ -309,6 +311,6 @@ class Tensor {
  private:
   std::shared_ptr<TensorImpl> impl_;
 };
-}  // namespace coreforge
+}  // namespace hpolib
 
-#endif  // __COREFORGE_TENSOR_H__
+#endif  // __HPOLIB_TENSOR_H__

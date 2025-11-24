@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_DTYPE_H__
-#define __COREFORGE_DTYPE_H__
+#ifndef __HPOLIB_DTYPE_H__
+#define __HPOLIB_DTYPE_H__
 
 #include <cstdint>
 #include <string>
@@ -12,7 +12,7 @@
 #include "config.h"
 #include "utils.h"
 
-namespace coreforge {
+namespace hpolib {
 
 enum class DType : int8_t {
   Float32 = 0,
@@ -199,6 +199,6 @@ struct ALIGN16 Dim2D {
   constexpr Dim2D(int64_t n) : rows(n), cols(n) {}
 };
 
-}  // namespace coreforge
+}  // namespace hpolib
 
 #endif

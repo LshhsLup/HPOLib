@@ -14,3 +14,172 @@ HPOLib 是一个致力于高性能计算（HPC）和并行计算的算子库项�
 深度学习模块: Embedding/Bag Forward/Backward, GRU/GRUCell Forward/Backward, LSTM/LSTMGates Forward/Backward, BiasAdd/Backward, FusedDropout, Softmax/Backward
 其他: BitCompute, BoxOverlapBev, Bucketize, CastDataType, CosineSimilarity, GridSampleForward/Backward, Histc, Interp/Backward, Lerp, LogicalOp/Not, Maximum/Minimum/Median, MulN, Nms, Normalize/Backward, OpTensor, PointsInBoxes, Quantize/Param, RandomUniform/Normal, Reduce, Rotate, Space2batch/Nd, Cummax/min/prod/sum
 
+```
+HPOLib
+├─ .clang-format
+├─ CMakeLists.txt
+├─ LICENSE
+├─ README.md
+├─ csrc
+│  ├─ common
+│  │  └─ cpu_info.h
+│  ├─ core
+│  │  ├─ BFloat16.h
+│  │  ├─ DType.h
+│  │  ├─ Half.h
+│  │  ├─ allocator.h
+│  │  ├─ config.h
+│  │  ├─ cuda.h
+│  │  ├─ device.h
+│  │  ├─ logger.h
+│  │  ├─ options.h
+│  │  ├─ scalar.h
+│  │  ├─ storage.h
+│  │  ├─ tensor.h
+│  │  ├─ tensorImpl.h
+│  │  ├─ utils.h
+│  │  └─ vectorUtils.h
+│  └─ kernels
+│     ├─ CMakeLists.txt
+│     ├─ abs
+│     │  ├─ cpu
+│     │  │  ├─ abs.cpp
+│     │  │  └─ abs.h
+│     │  └─ cuda
+│     │     ├─ abs.cu
+│     │     └─ abs.cuh
+│     ├─ activation_backward
+│     └─ activation_forward
+├─ format_code.sh
+└─ tests
+   ├─ CMakeLists.txt
+   └─ tensor
+      └─ test_half.cu
+
+```
+```
+HPOLib
+├─ .clang-format
+├─ CMakeLists.txt
+├─ LICENSE
+├─ README.md
+├─ csrc
+│  ├─ common
+│  │  └─ cpu_info.h
+│  ├─ core
+│  │  ├─ BFloat16.h
+│  │  ├─ DType.h
+│  │  ├─ Half.h
+│  │  ├─ allocator.h
+│  │  ├─ config.h
+│  │  ├─ cuda.h
+│  │  ├─ device.h
+│  │  ├─ logger.h
+│  │  ├─ options.h
+│  │  ├─ scalar.h
+│  │  ├─ storage.h
+│  │  ├─ tensor.h
+│  │  ├─ tensorImpl.h
+│  │  ├─ utils.h
+│  │  └─ vectorUtils.h
+│  └─ kernels
+│     ├─ CMakeLists.txt
+│     ├─ abs
+│     │  ├─ abs.h
+│     │  ├─ abs_cpu.cpp
+│     │  └─ abs_cuda.cu
+│     ├─ activation_backward
+│     └─ activation_forward
+├─ format_code.sh
+└─ tests
+   ├─ CMakeLists.txt
+   └─ tensor
+      └─ test_half.cu
+
+```
+```
+HPOLib
+├─ .clang-format
+├─ CMakeLists.txt
+├─ LICENSE
+├─ README.md
+├─ csrc
+│  ├─ common
+│  │  └─ cpu_info.h
+│  ├─ core
+│  │  ├─ BFloat16.h
+│  │  ├─ DType.h
+│  │  ├─ Half.h
+│  │  ├─ allocator.h
+│  │  ├─ config.h
+│  │  ├─ cuda.h
+│  │  ├─ device.h
+│  │  ├─ logger.h
+│  │  ├─ options.h
+│  │  ├─ scalar.h
+│  │  ├─ storage.h
+│  │  ├─ tensor.h
+│  │  ├─ tensorImpl.h
+│  │  ├─ utils.h
+│  │  └─ vectorUtils.h
+│  ├─ kernels
+│  │  ├─ CMakeLists.txt
+│  │  ├─ abs
+│  │  │  ├─ abs.h
+│  │  │  ├─ abs_cpu.cpp
+│  │  │  └─ abs_cuda.cu
+│  │  ├─ activation_backward
+│  │  └─ activation_forward
+│  └─ ops
+│     ├─ abs.cpp
+│     └─ api.h
+├─ format_code.sh
+└─ tests
+   ├─ CMakeLists.txt
+   └─ tensor
+      └─ test_half.cu
+
+```
+```
+HPOLib
+├─ .clang-format
+├─ CMakeLists.txt
+├─ LICENSE
+├─ README.md
+├─ csrc
+│  ├─ common
+│  │  └─ cpu_info.h
+│  ├─ core
+│  │  ├─ BFloat16.h
+│  │  ├─ DType.h
+│  │  ├─ Half.h
+│  │  ├─ allocator.h
+│  │  ├─ config.h
+│  │  ├─ cuda.h
+│  │  ├─ device.h
+│  │  ├─ logger.h
+│  │  ├─ options.h
+│  │  ├─ scalar.h
+│  │  ├─ storage.h
+│  │  ├─ tensor.h
+│  │  ├─ tensorImpl.h
+│  │  ├─ utils.h
+│  │  └─ vectorUtils.h
+│  ├─ kernels
+│  │  ├─ CMakeLists.txt
+│  │  ├─ abs
+│  │  │  ├─ abs.h
+│  │  │  ├─ abs_cpu.cpp
+│  │  │  └─ abs_cuda.cu
+│  │  ├─ activation_backward
+│  │  └─ activation_forward
+│  └─ ops
+│     ├─ abs.cpp
+│     └─ api.h
+├─ format_code.sh
+└─ tests
+   ├─ CMakeLists.txt
+   └─ tensor
+      └─ test_half.cu
+
+```

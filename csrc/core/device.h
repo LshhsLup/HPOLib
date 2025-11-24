@@ -1,10 +1,10 @@
-#ifndef __COREFORGE_DEVICE_H__
-#define __COREFORGE_DEVICE_H__
+#ifndef __HPOLIB_DEVICE_H__
+#define __HPOLIB_DEVICE_H__
 
 #include <cstdint>
 #include <string_view>
 
-namespace coreforge {
+namespace hpolib {
 
 enum class DeviceType : int8_t { CPU = 0, GPU = 1, DeviceTypeCount };
 
@@ -48,6 +48,6 @@ struct Device {
   }
 };
 
-}  // namespace coreforge
+}  // namespace hpolib
 
-#endif  // __COREFORGE_DEVICE_H__
+#endif  // __HPOLIB_DEVICE_H__

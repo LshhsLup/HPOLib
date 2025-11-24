@@ -1,5 +1,5 @@
-#ifndef __COREFORGE_CUDA_UTILS_H__
-#define __COREFORGE_CUDA_UTILS_H__
+#ifndef __HPOLIB_CUDA_UTILS_H__
+#define __HPOLIB_CUDA_UTILS_H__
 
 #if defined(__CUDACC__)
 #include <cuda_runtime.h>
@@ -8,7 +8,7 @@
 #include "logger.h"
 #include "utils.h"
 
-namespace coreforge::cuda {
+namespace hpolib::cuda {
 
 #if defined(__CUDACC__)
 
@@ -228,6 +228,6 @@ CUDAStream& getCurrentCUDAStream(int device_id) {
 
 #endif  // __CUDACC__
 
-}  // namespace coreforge::cuda
+}  // namespace hpolib::cuda
 
-#endif  // __COREFORGE_CUDA_UTILS_H__
+#endif  // __HPOLIB_CUDA_UTILS_H__
